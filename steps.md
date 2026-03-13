@@ -89,3 +89,17 @@ The backend now understands all 4 modules. You send it 33 body landmarks and tel
 
 **Files changed**
 ~ modified: backend/main.py
+
+---
+
+## ✅ Step 7 — API Docs Page
+*Completed: 2026-03-14*
+
+**What was built**
+- `src/app/docs/page.tsx` — Stripe-style two-column API reference with sticky sidebar, language switcher (curl/JS/Python), response schema tables, and copy buttons on every code block
+
+**In plain English**
+The docs page looks and works like professional API documentation. A sidebar on the left lets you jump to any endpoint. Each endpoint shows the request code in your language of choice (curl, JavaScript, or Python) next to the response, with a table explaining every field. Switching languages at the top updates all code examples at once. Any developer can land on this page and have a working API call copied to their clipboard in under a minute.
+
+**Files changed**
++ created: src/app/docs/page.tsx
