@@ -103,3 +103,17 @@ The docs page looks and works like professional API documentation. A sidebar on 
 
 **Files changed**
 + created: src/app/docs/page.tsx
+
+---
+
+## ✅ Step 8 — Pricing Page
+*Completed: 2026-03-14*
+
+**What was built**
+- `src/app/pricing/page.tsx` — standalone pricing page with monthly/annual billing toggle, 3 tier cards, feature comparison table, FAQ accordion, and bottom CTA
+
+**In plain English**
+The pricing page gives visitors everything they need to choose a plan without talking to anyone. A toggle at the top switches between monthly and annual pricing (annual saves 20%). Three cards show Free, Pro, and Enterprise side by side — Pro is visually highlighted as the recommended option. Below the cards, a full comparison table lets you scan exactly which features each tier includes. An FAQ accordion answers the five most common billing questions. Anyone who lands here can understand the product's value and pick a tier in under two minutes.
+
+**Files changed**
++ created: src/app/pricing/page.tsx
