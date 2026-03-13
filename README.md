@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# XVision
 
-## Getting Started
+**AI-Powered Human Pose Detection** — Real-time body tracking using your camera and MediaPipe AI.
 
-First, run the development server:
+No data leaves your device. Everything runs in the browser.
+
+## Features
+
+- **Real-time pose detection** — 33 body landmarks tracked at 30+ FPS
+- **Works on any device** — Phone camera, laptop webcam, tablet
+- **Privacy-first** — All processing happens in your browser, nothing sent to any server
+- **Skeleton overlay** — Live visualization of detected body pose
+- **Mobile-friendly** — Front/back camera switching on phones
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14, TypeScript, Tailwind CSS |
+| AI/ML | MediaPipe Pose Landmarker (runs in browser) |
+| Backend | Python FastAPI |
+| Deployment | Vercel (frontend), any Python host (backend) |
+
+## Quick Start
+
+### Frontend (Next.js)
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend (Python)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+xvision/
+├── src/app/              # Next.js pages
+│   ├── page.tsx          # Marketing landing page
+│   └── detect/page.tsx   # Live camera detection
+├── backend/              # Python FastAPI backend
+│   ├── main.py           # API server
+│   └── requirements.txt
+└── public/               # Static assets
+```
 
-To learn more about Next.js, take a look at the following resources:
+## How It Works
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Open your camera** — Click "Start Detection" on the /detect page
+2. **AI processes each frame** — MediaPipe Pose Landmarker runs in your browser
+3. **See the skeleton** — 33 body landmarks drawn in real-time over your camera feed
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+MIT
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Author
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built by [Gargi Gupta](https://github.com/GargiGupta-io)
