@@ -61,3 +61,31 @@ The original detect page just drew a skeleton on the camera. Now it runs the ful
 
 **Files changed**
 ~ modified: src/app/detect/page.tsx
+
+---
+
+## ✅ Phase 2 — Platform Landing Page
+*Completed: 2026-03-14*
+
+**What was built**
+- `src/app/page.tsx` — full rewrite as B2B platform landing page with 7 sections
+
+**In plain English**
+The landing page went from "personal project showcase" to "real SaaS platform." It now opens with "AI Vision Infrastructure for Any Industry" and immediately shows the four stats that answer every buyer's first objections (accuracy, speed, server cost, privacy). A tabbed section lets Healthcare, Retail, Workplace, and Education visitors each see copy and live API output shaped for their industry. A syntax-highlighted code block shows developers exactly how to integrate in 10 lines. Pricing tiers make it feel like a real product.
+
+**Files changed**
+~ modified: src/app/page.tsx
+
+---
+
+## ✅ Step 6 — Backend Module API Endpoints
+*Completed: 2026-03-14*
+
+**What was built**
+- `backend/main.py` — full rewrite with `POST /api/v1/analyze` endpoint, module logic in Python, consistent `{ ok, data, timestamp }` response envelope, and `GET /api/v1/modules` listing
+
+**In plain English**
+The backend now understands all 4 modules. You send it 33 body landmarks and tell it which module to run (posture, movement, activity, or presence), and it sends back the same structured data the browser modules produce — score, flags, intensity, zone occupancy, etc. Every response uses the same envelope shape so any client only needs one error handler. The math mirrors the TypeScript modules exactly, so the API and the browser give consistent results.
+
+**Files changed**
+~ modified: backend/main.py
