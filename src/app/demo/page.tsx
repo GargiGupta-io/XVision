@@ -547,8 +547,9 @@ export default function DemoPage() {
 
               {/* FPS badge */}
               {started && (
-                <div className="absolute bottom-3 right-3 bg-black/60 rounded-full px-3 py-1 text-xs font-mono text-gray-500">
-                  {fps} fps
+                <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-gray-950/70 backdrop-blur-sm border border-gray-800 rounded-full px-2.5 py-1">
+                  <div className={`w-1.5 h-1.5 rounded-full ${fps > 20 ? "bg-green-400" : fps > 10 ? "bg-yellow-400" : "bg-red-400"}`} />
+                  <span className="text-xs font-mono text-gray-400">{fps} fps</span>
                 </div>
               )}
             </div>
