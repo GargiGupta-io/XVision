@@ -301,7 +301,8 @@ export default function DemoPage() {
   useEffect(() => () => stopCamera(), [stopCamera]);
 
   const renderStats = () => {
-    if (!result) {
+    // Presence panel always renders — shows Undetected state when no result
+    if (!result && activeModule !== "presence") {
       return (
         <div className="flex flex-col items-center justify-center h-48 gap-3 text-center px-6">
           <p className="text-gray-600 text-sm">
@@ -406,7 +407,9 @@ export default function DemoPage() {
         );
       }
       case "presence": {
-        const r = result as PresenceResult;
+        const r = (result as PresenceResult | null) ?? {
+          detected: false, dwellSeconds: 0, zoneOccupancy: {}, bodyVisibility: 0,
+        };
         return (
           <div className="p-5 space-y-4 font-mono text-sm">
             <div className="flex items-center gap-3">
