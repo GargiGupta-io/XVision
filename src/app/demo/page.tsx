@@ -53,16 +53,19 @@ export default function DemoPage() {
   const lastTimeRef = useRef(0);
   const frameCountRef = useRef(0);
   const activeModuleRef = useRef<ModuleId>("posture");
+  const frozenRef = useRef(false);
 
   const [started, setStarted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [frozen, setFrozen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeModule, setActiveModule] = useState<ModuleId>("posture");
   const [fps, setFps] = useState(0);
   const [result, setResult] = useState<ModuleResult | null>(null);
 
-  // Keep ref in sync so the detection loop always reads the latest module
+  // Keep refs in sync so the detection loop always reads the latest values
   useEffect(() => { activeModuleRef.current = activeModule; }, [activeModule]);
+  useEffect(() => { frozenRef.current = frozen; }, [frozen]);
 
   const stopCamera = useCallback(() => {
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
@@ -261,7 +264,7 @@ export default function DemoPage() {
       ctx.drawImage(video, 0, 0);
 
       const now = performance.now();
-      if (now - lastTimeRef.current > 0) {
+      if (now - lastTimeRef.current > 0 && !frozenRef.current) {
         try {
           const detection = poseLandmarker.detectForVideo(video, now);
           if (detection.landmarks?.length > 0) {
@@ -543,12 +546,24 @@ export default function DemoPage() {
             </div>
 
             {started && (
-              <button
-                onClick={stopCamera}
-                className="self-start px-5 py-2 rounded-full border border-red-900 hover:border-red-600 hover:bg-red-600/10 transition text-sm text-red-400"
-              >
-                Stop Camera
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setFrozen(f => !f)}
+                  className={`px-5 py-2 rounded-full border transition text-sm ${
+                    frozen
+                      ? "border-cyan-500 text-cyan-400 bg-cyan-500/10"
+                      : "border-gray-700 text-gray-400 hover:border-gray-500"
+                  }`}
+                >
+                  {frozen ? "Unfreeze" : "Capture"}
+                </button>
+                <button
+                  onClick={stopCamera}
+                  className="px-5 py-2 rounded-full border border-red-900 hover:border-red-600 hover:bg-red-600/10 transition text-sm text-red-400"
+                >
+                  Stop Camera
+                </button>
+              </div>
             )}
           </div>
 
