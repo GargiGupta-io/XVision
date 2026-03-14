@@ -2,7 +2,7 @@ import { RollingAverage, type AnalyzerOutput } from "../pose/analyzer";
 
 export interface MovementResult {
   module: "movement";
-  intensity: "still" | "low" | "medium" | "high";
+  intensity: "still" | "low" | "medium" | "high" | "very high";
   activeZones: string[];
   dominantRegion: string | null;
   velocityMs: number;  // real-world velocity in m/s
@@ -15,8 +15,9 @@ export interface MovementResult {
 const THRESHOLDS = {
   still:  0.05,  // was 0.02 — raised to clear camera noise floor
   low:    0.14,  // was 0.08 — subtle motion (breathing, weight shift)
-  medium: 0.30,  // was 0.20 — deliberate movement
-  // high = anything above 0.30 — fast / vigorous
+  medium:    0.30,  // was 0.20 — deliberate movement
+  high:      0.55,  // fast / vigorous
+  // very high = anything above 0.55 — running, jumping, intense exercise
 };
 
 // Smooth overallMotion over 10 frames so intensity label doesn't thrash on noise spikes
@@ -52,9 +53,10 @@ export function analyzeMovement(output: AnalyzerOutput): MovementResult {
 
   const smoothedMotion = _motionSmoothing.push(overallMotion);
   const intensity: MovementResult["intensity"] =
-    smoothedMotion < THRESHOLDS.still  ? "still"  :
-    smoothedMotion < THRESHOLDS.low    ? "low"    :
-    smoothedMotion < THRESHOLDS.medium ? "medium" : "high";
+    smoothedMotion < THRESHOLDS.still  ? "still"     :
+    smoothedMotion < THRESHOLDS.low    ? "low"       :
+    smoothedMotion < THRESHOLDS.medium ? "medium"    :
+    smoothedMotion < THRESHOLDS.high   ? "high"      : "very high";
 
   const regionValues = REGION_LABELS.map(([key, label]) => ({
     label,
