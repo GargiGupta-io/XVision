@@ -4,7 +4,8 @@ export interface ActivityResult {
   module: "activity";
   behavior: "idle" | "walking" | "exercising" | "reaching" | "gesturing";
   gesture: string | null;
-  repetitionCount: number;
+  repCount: number;
+  repCalibrating: boolean;
   confidence: number;
 }
 
@@ -87,7 +88,7 @@ export function resetRepCount(): void {
 function updateRepCount(output: AnalyzerOutput): number {
   const { overallMotion } = output;
   _repHistory.push(overallMotion);
-  if (_repHistory.length > 30) _repHistory.shift(); // ~1 second at 30fps
+  if (_repHistory.length > 900) _repHistory.shift(); // ~30 seconds at 30fps
 
   // Peak detection: current value is a local max above threshold
   const recent = _repHistory.slice(-5);
