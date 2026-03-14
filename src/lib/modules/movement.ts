@@ -1,4 +1,4 @@
-import type { AnalyzerOutput } from "../pose/analyzer";
+import { RollingAverage, type AnalyzerOutput } from "../pose/analyzer";
 
 export interface MovementResult {
   module: "movement";
@@ -18,6 +18,9 @@ const THRESHOLDS = {
   medium: 0.30,  // was 0.20 — deliberate movement
   // high = anything above 0.30 — fast / vigorous
 };
+
+// Smooth overallMotion over 10 frames so intensity label doesn't thrash on noise spikes
+const _motionSmoothing = new RollingAverage(10);
 
 // Track last frame timestamp to compute real frame delta for velocity
 let _lastTimestamp = 0;
@@ -47,10 +50,11 @@ export function analyzeMovement(output: AnalyzerOutput): MovementResult {
     ? Math.round((rawDisplacement * bodyScale) / frameDelta * 100) / 100
     : 0;
 
+  const smoothedMotion = _motionSmoothing.push(overallMotion);
   const intensity: MovementResult["intensity"] =
-    overallMotion < THRESHOLDS.still  ? "still"  :
-    overallMotion < THRESHOLDS.low    ? "low"    :
-    overallMotion < THRESHOLDS.medium ? "medium" : "high";
+    smoothedMotion < THRESHOLDS.still  ? "still"  :
+    smoothedMotion < THRESHOLDS.low    ? "low"    :
+    smoothedMotion < THRESHOLDS.medium ? "medium" : "high";
 
   const regionValues = REGION_LABELS.map(([key, label]) => ({
     label,
