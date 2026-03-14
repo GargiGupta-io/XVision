@@ -352,16 +352,17 @@ export default function DemoPage() {
         const r = result as MovementResult;
         const ic: Record<string, string> = {
           still: "text-gray-400", low: "text-cyan-400",
-          medium: "text-yellow-400", high: "text-red-400", "very high": "text-red-400",
+          medium: "text-yellow-400", high: "text-red-400", "very high": "text-orange-400",
         };
         return (
           <div className="p-5 space-y-4 font-mono text-sm">
             <div>
               <div className="text-gray-600 text-xs uppercase tracking-wider mb-1">Intensity</div>
-              <span className={`text-3xl font-bold uppercase ${ic[r.intensity]}`}>{r.intensity}</span>
+              <span className={`text-3xl font-bold uppercase ${ic[r.intensity] ?? "text-cyan-400"}`}>{r.intensity}</span>
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
               <Row label="Velocity"  value={`${r.velocityMs} m/s`} />
+              <Row label="Direction" value={r.direction ?? "—"} />
               <Row label="Dominant"  value={r.dominantRegion ?? "none"} />
             </div>
             <div className="border-t border-gray-800 pt-3">
@@ -371,6 +372,12 @@ export default function DemoPage() {
                 : r.activeZones.map(z => <div key={z} className="text-cyan-400 text-xs">• {z}</div>)
               }
             </div>
+            {r.flags.length > 0 && (
+              <div className="border-t border-gray-800 pt-3">
+                <div className="text-gray-600 text-xs uppercase tracking-wider mb-2">Flags</div>
+                {r.flags.map(f => <div key={f} className="text-cyan-300 text-xs">• {f}</div>)}
+              </div>
+            )}
             <div className="border-t border-gray-800 pt-3">
               <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
             </div>
