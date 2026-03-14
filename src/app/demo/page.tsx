@@ -328,9 +328,12 @@ export default function DemoPage() {
               </div>
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
-              <Row label="Neck angle"   value={`${r.angles.neck}°`} />
-              <Row label="Spine angle"  value={`${r.angles.spine}°`} />
-              <Row label="Shoulder Δ"   value={`${r.angles.shoulderBalance}`} />
+              <Row label="Neck angle"      value={`${r.angles.neck}°`} />
+              <Row label="Spine angle"     value={`${r.angles.spine}°`} />
+              <Row label="Shoulder Δ"      value={`${r.angles.shoulderBalance} cm`} />
+              <Row label="Forward head"    value={`${r.angles.forwardHeadDepth}`} />
+              <Row label="Rounded shldrs"  value={`${r.angles.roundedShoulderDepth}`} />
+              <Row label="Hip tilt"        value={`${r.angles.hipTilt}°`} />
             </div>
             <div className="border-t border-gray-800 pt-3">
               <div className="text-gray-600 text-xs uppercase tracking-wider mb-2">Flags</div>
