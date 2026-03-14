@@ -5,7 +5,7 @@ import Link from "next/link";
 import { analyzePose, type Landmark } from "@/lib/pose/analyzer";
 import { analyzePosture, type PostureResult } from "@/lib/modules/posture";
 import { analyzeMovement, type MovementResult } from "@/lib/modules/movement";
-import { analyzeActivity, type ActivityResult } from "@/lib/modules/activity";
+import { analyzeActivity, resetRepCount, type ActivityResult } from "@/lib/modules/activity";
 import { analyzePresence, DEFAULT_ZONES, type PresenceResult } from "@/lib/modules/presence";
 
 const POSE_CONNECTIONS: [number, number][] = [
@@ -402,10 +402,20 @@ export default function DemoPage() {
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
               <Row label="Gesture" value={r.gesture ?? "none"} />
-              <Row
-                label="Reps"
-                value={r.repCalibrating ? "Calibrating…" : String(r.repCount)}
-              />
+              <div className="flex justify-between items-center py-0.5">
+                <span className="text-gray-500">Reps</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-200 font-semibold">
+                    {r.repCalibrating ? "Calibrating…" : r.repCount}
+                  </span>
+                  <button
+                    onClick={resetRepCount}
+                    className="text-xs text-gray-600 hover:text-gray-300 border border-gray-800 hover:border-gray-600 rounded px-1.5 py-0.5 transition"
+                  >
+                    recount
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="border-t border-gray-800 pt-3">
               <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
