@@ -44,3 +44,5 @@ backend/.venv/
 # env
 .env
 .env.local
+
+.vercel
