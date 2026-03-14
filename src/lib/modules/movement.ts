@@ -3,6 +3,7 @@ import { RollingAverage, type AnalyzerOutput } from "../pose/analyzer";
 export interface MovementResult {
   module: "movement";
   intensity: "still" | "low" | "medium" | "high" | "very high";
+  flags: string[];
   activeZones: string[];
   dominantRegion: string | null;
   velocityMs: number;  // real-world velocity in m/s
@@ -22,6 +23,9 @@ const THRESHOLDS = {
 
 // Smooth overallMotion over 10 frames so intensity label doesn't thrash on noise spikes
 const _motionSmoothing = new RollingAverage(10);
+
+// Longer baseline (30 frames ~1s) used to detect sudden bursts vs steady-state motion
+const _motionBaseline = new RollingAverage(30);
 
 // Track last frame timestamp to compute real frame delta for velocity
 let _lastTimestamp = 0;
@@ -52,6 +56,7 @@ export function analyzeMovement(output: AnalyzerOutput): MovementResult {
     : 0;
 
   const smoothedMotion = _motionSmoothing.push(overallMotion);
+  const baselineMotion = _motionBaseline.push(overallMotion);
   const intensity: MovementResult["intensity"] =
     smoothedMotion < THRESHOLDS.still  ? "still"     :
     smoothedMotion < THRESHOLDS.low    ? "low"       :
@@ -107,9 +112,31 @@ export function analyzeMovement(output: AnalyzerOutput): MovementResult {
   }
   _lastHipCentroid = hipCentroid;
 
+  // --- Flags ---
+  const flags: string[] = [];
+
+  if (intensity === "still")                          flags.push("not moving");
+  if (intensity === "low")                            flags.push("moving slow");
+  if (intensity === "high" || intensity === "very high") flags.push("moving fast");
+
+  // Region-dominant flags
+  if (regions.arms > 0.12 && regions.legs < 0.06)   flags.push("arms only");
+  if (regions.legs > 0.12 && regions.arms < 0.06)   flags.push("legs only");
+  if (regions.arms > 0.10 && regions.legs > 0.10)   flags.push("full body");
+
+  // Sudden burst: short-term spike significantly above recent baseline
+  if (
+    _motionBaseline.ready &&
+    smoothedMotion > baselineMotion * 1.8 &&
+    smoothedMotion > THRESHOLDS.low
+  ) {
+    flags.push("sudden burst");
+  }
+
   return {
     module: "movement",
     intensity,
+    flags,
     activeZones,
     dominantRegion,
     velocityMs,
