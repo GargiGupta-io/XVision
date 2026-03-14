@@ -122,7 +122,8 @@ export function analyzeActivity(output: AnalyzerOutput): ActivityResult {
     module: "activity",
     behavior,
     gesture,
-    repetitionCount: _totalReps,
+    repCount: _totalReps,
+    repCalibrating: false,
     bodyVisibility: Math.round(output.visibilityScore * 100) / 100,
   };
 }
