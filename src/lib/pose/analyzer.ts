@@ -52,13 +52,14 @@ const LM = {
   LEFT_FOOT: 31, RIGHT_FOOT: 32,
 } as const;
 
-// Compute angle at joint B given three points A-B-C (degrees)
+// Compute angle at joint B given three points A-B-C (degrees) — full 3D using x, y, z
 function angleBetween(a: Landmark, b: Landmark, c: Landmark): number {
-  const ba = { x: a.x - b.x, y: a.y - b.y };
-  const bc = { x: c.x - b.x, y: c.y - b.y };
-  const dot = ba.x * bc.x + ba.y * bc.y;
-  const magBA = Math.sqrt(ba.x ** 2 + ba.y ** 2);
-  const magBC = Math.sqrt(bc.x ** 2 + bc.y ** 2);
+  const az = a.z ?? 0, bz = b.z ?? 0, cz = c.z ?? 0;
+  const ba = { x: a.x - b.x, y: a.y - b.y, z: az - bz };
+  const bc = { x: c.x - b.x, y: c.y - b.y, z: cz - bz };
+  const dot = ba.x * bc.x + ba.y * bc.y + ba.z * bc.z;
+  const magBA = Math.sqrt(ba.x ** 2 + ba.y ** 2 + ba.z ** 2);
+  const magBC = Math.sqrt(bc.x ** 2 + bc.y ** 2 + bc.z ** 2);
   if (magBA === 0 || magBC === 0) return 0;
   return Math.acos(Math.max(-1, Math.min(1, dot / (magBA * magBC)))) * (180 / Math.PI);
 }
