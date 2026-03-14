@@ -1,4 +1,4 @@
-import type { AnalyzerOutput } from "../pose/analyzer";
+import { RollingAverage, type AnalyzerOutput } from "../pose/analyzer";
 
 export interface PostureResult {
   module: "posture";
@@ -24,6 +24,9 @@ const IDEAL = {
   roundedShoulderDepth: { max: 0.03 },
   hipTilt:              { max: 3  },
 };
+
+// Smooth posture score over ~12 frames (~0.4s at 30fps) to stop jitter
+const _scoreSmoothing = new RollingAverage(12);
 
 function scoreAngle(value: number, max: number): number {
   if (value <= max) return 100;
@@ -75,13 +78,13 @@ export function analyzePosture(output: AnalyzerOutput): PostureResult {
     ? scoreAngle(roundedShoulderDepth * 100, IDEAL.roundedShoulderDepth.max * 100)
     : 100;
 
-  const score = Math.round(
+  const rawScore =
     neckScore        * 0.20 +
     spineScore       * 0.20 +
     shoulderScore    * 0.15 +
     forwardHeadScore * 0.25 +
-    roundedScore     * 0.20
-  );
+    roundedScore     * 0.20;
+  const score = Math.round(_scoreSmoothing.push(rawScore));
 
   // --- Flags ---
   // Neck lateral tilt (renamed from "forward head" — this is what 2D actually measures)
