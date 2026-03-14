@@ -38,6 +38,27 @@ export interface AnalyzerOutput {
   timestamp: number;
 }
 
+// Rolling average — smooths noisy per-frame values over N frames.
+// Modules use this to stop scores and intensity from jittering every frame.
+export class RollingAverage {
+  private buffer: number[] = [];
+  constructor(private size: number) {}
+
+  push(value: number): number {
+    this.buffer.push(value);
+    if (this.buffer.length > this.size) this.buffer.shift();
+    return this.buffer.reduce((s, v) => s + v, 0) / this.buffer.length;
+  }
+
+  get ready(): boolean {
+    return this.buffer.length >= this.size;
+  }
+
+  reset(): void {
+    this.buffer = [];
+  }
+}
+
 // MediaPipe landmark indices
 const LM = {
   NOSE: 0,
