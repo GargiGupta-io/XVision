@@ -34,6 +34,7 @@ export interface AnalyzerOutput {
   regions: BodyRegionActivity;
   overallMotion: number;       // 0-1 aggregate movement
   visibilityScore: number;     // 0-1 how many landmarks are visible
+  bodyScale: number;           // meters per normalized unit — derived from shoulder-hip distance
   timestamp: number;
 }
 
@@ -164,12 +165,19 @@ export function analyzePose(
   const visibilityScore =
     lm.filter((l) => (l.visibility ?? 0) > 0.5).length / lm.length;
 
+  // Body scale — real-world meters per normalized unit.
+  // Average human shoulder-to-hip distance is ~0.5m. Measuring it in
+  // normalized space gives a scale factor that corrects for camera distance.
+  const shoulderHipDist = distance(midShoulder, midHip);
+  const bodyScale = shoulderHipDist > 0.01 ? 0.5 / shoulderHipDist : 1;
+
   return {
     landmarks,
     angles,
     regions,
     overallMotion,
     visibilityScore,
+    bodyScale,
     timestamp: Date.now(),
   };
 }
