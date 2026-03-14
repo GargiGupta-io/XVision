@@ -10,10 +10,13 @@ export interface MovementResult {
   bodyVisibility: number;
 }
 
+// Thresholds are calibrated for the ×20 amplification in regionMotion().
+// Camera noise alone produces overallMotion ~0.02-0.04 even when perfectly still.
 const THRESHOLDS = {
-  still:  0.02,
-  low:    0.08,
-  medium: 0.20,
+  still:  0.05,  // was 0.02 — raised to clear camera noise floor
+  low:    0.14,  // was 0.08 — subtle motion (breathing, weight shift)
+  medium: 0.30,  // was 0.20 — deliberate movement
+  // high = anything above 0.30 — fast / vigorous
 };
 
 // Track last frame timestamp to compute real frame delta for velocity
