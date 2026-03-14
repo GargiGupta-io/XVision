@@ -6,7 +6,7 @@ import { analyzePose, type Landmark } from "@/lib/pose/analyzer";
 import { analyzePosture, type PostureResult } from "@/lib/modules/posture";
 import { analyzeMovement, type MovementResult } from "@/lib/modules/movement";
 import { analyzeActivity, type ActivityResult } from "@/lib/modules/activity";
-import { analyzePresence, type PresenceResult } from "@/lib/modules/presence";
+import { analyzePresence, DEFAULT_ZONES, type PresenceResult } from "@/lib/modules/presence";
 
 const POSE_CONNECTIONS: [number, number][] = [
   [0, 1], [1, 2], [2, 3], [3, 7], [0, 4], [4, 5], [5, 6], [6, 8],
@@ -155,26 +155,22 @@ export default function DemoPage() {
       case "presence": {
         const r = res as PresenceResult;
         drawSkeleton(ctx, landmarks, w, h, "rgba(249,115,22,0.5)", "#f97316");
-        const bands = [
-          { name: "upper",  y: 0,    bh: 0.33 },
-          { name: "middle", y: 0.33, bh: 0.34 },
-          { name: "lower",  y: 0.67, bh: 0.33 },
-        ];
-        for (const band of bands) {
-          const occupied = r.zoneOccupancy[band.name];
-          ctx.strokeStyle = occupied ? "rgba(249,115,22,0.7)" : "rgba(249,115,22,0.15)";
-          ctx.lineWidth = 1;
-          ctx.strokeRect(0, band.y * h, w, band.bh * h);
+        // 3×3 grid — green if occupied, red if not
+        for (const zone of DEFAULT_ZONES) {
+          const occupied = r.zoneOccupancy[zone.name];
+          ctx.strokeStyle = occupied ? "rgba(34,197,94,0.8)" : "rgba(239,68,68,0.4)";
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(zone.x * w, zone.y * h, zone.width * w, zone.height * h);
           if (occupied) {
-            ctx.fillStyle = "rgba(249,115,22,0.07)";
-            ctx.fillRect(0, band.y * h, w, band.bh * h);
+            ctx.fillStyle = "rgba(34,197,94,0.08)";
+            ctx.fillRect(zone.x * w, zone.y * h, zone.width * w, zone.height * h);
           }
         }
         ctx.fillStyle = "rgba(0,0,0,0.65)";
-        ctx.fillRect(12, 12, 150, 38);
+        ctx.fillRect(12, 12, 160, 38);
         ctx.font = "bold 13px monospace";
         ctx.fillStyle = r.detected ? "#f97316" : "#6b7280";
-        ctx.fillText(r.detected ? `PRESENT  ${r.dwellSeconds}s` : "NOT DETECTED", 22, 36);
+        ctx.fillText(r.detected ? `PRESENT  ${r.dwellSeconds}s` : "UNDETECTED", 22, 36);
         break;
       }
     }
