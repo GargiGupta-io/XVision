@@ -340,7 +340,7 @@ export default function DemoPage() {
               }
             </div>
             <div className="border-t border-gray-800 pt-3">
-              <Row label="Confidence" value={`${Math.round(r.confidence * 100)}%`} />
+              <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
             </div>
           </div>
         );
@@ -349,7 +349,7 @@ export default function DemoPage() {
         const r = result as MovementResult;
         const ic: Record<string, string> = {
           still: "text-gray-400", low: "text-cyan-400",
-          medium: "text-yellow-400", high: "text-red-400",
+          medium: "text-yellow-400", high: "text-red-400", "very high": "text-red-400",
         };
         return (
           <div className="p-5 space-y-4 font-mono text-sm">
@@ -358,7 +358,7 @@ export default function DemoPage() {
               <span className={`text-3xl font-bold uppercase ${ic[r.intensity]}`}>{r.intensity}</span>
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
-              <Row label="Velocity"  value={r.velocity.toFixed(3)} />
+              <Row label="Velocity"  value={`${r.velocityMs} m/s`} />
               <Row label="Dominant"  value={r.dominantRegion ?? "none"} />
             </div>
             <div className="border-t border-gray-800 pt-3">
@@ -369,7 +369,7 @@ export default function DemoPage() {
               }
             </div>
             <div className="border-t border-gray-800 pt-3">
-              <Row label="Confidence" value={`${Math.round(r.confidence * 100)}%`} />
+              <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
             </div>
           </div>
         );
@@ -384,10 +384,10 @@ export default function DemoPage() {
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
               <Row label="Gesture" value={r.gesture ?? "none"} />
-              <Row label="Reps"    value={String(r.repetitionCount)} />
+              <Row label="Reps"    value={String(r.repCount)} />
             </div>
             <div className="border-t border-gray-800 pt-3">
-              <Row label="Confidence" value={`${Math.round(r.confidence * 100)}%`} />
+              <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
             </div>
           </div>
         );
@@ -399,7 +399,7 @@ export default function DemoPage() {
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full ${r.detected ? "bg-orange-400 animate-pulse" : "bg-gray-700"}`} />
               <span className={`text-2xl font-bold uppercase ${r.detected ? "text-orange-400" : "text-gray-500"}`}>
-                {r.detected ? "Detected" : "Empty"}
+                {r.detected ? "Detected" : "Undetected"}
               </span>
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
@@ -415,7 +415,7 @@ export default function DemoPage() {
               ))}
             </div>
             <div className="border-t border-gray-800 pt-3">
-              <Row label="Confidence" value={`${Math.round(r.confidence * 100)}%`} />
+              <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
             </div>
           </div>
         );

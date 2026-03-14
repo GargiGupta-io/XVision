@@ -249,8 +249,8 @@ export default function DetectPage() {
               FPS: <span className="text-cyan-400 font-mono">{fps}</span>
             </div>
             <div className="text-gray-500">
-              Confidence: <span className="text-green-400 font-mono">
-                {results ? `${Math.round(results.posture.confidence * 100)}%` : "—"}
+              Visibility: <span className="text-green-400 font-mono">
+                {results ? `${Math.round(results.posture.bodyVisibility * 100)}%` : "—"}
               </span>
             </div>
           </div>
