@@ -394,7 +394,10 @@ export default function DemoPage() {
             </div>
             <div className="border-t border-gray-800 pt-4 space-y-1">
               <Row label="Gesture" value={r.gesture ?? "none"} />
-              <Row label="Reps"    value={String(r.repCount)} />
+              <Row
+                label="Reps"
+                value={r.repCalibrating ? "Calibrating…" : String(r.repCount)}
+              />
             </div>
             <div className="border-t border-gray-800 pt-3">
               <Row label="Visibility" value={`${Math.round(r.bodyVisibility * 100)}%`} />
