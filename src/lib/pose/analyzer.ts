@@ -11,7 +11,7 @@ export interface Landmark {
 export interface JointAngles {
   neck: number;           // degrees — head tilt from vertical
   spine: number;          // degrees — torso lean from vertical
-  shoulderBalance: number;// cm difference — left vs right shoulder height
+  shoulderBalance: number;// real cm — left vs right shoulder height difference
   leftElbow: number;      // degrees — upper arm to forearm
   rightElbow: number;
   leftKnee: number;       // degrees — thigh to shin
@@ -132,6 +132,10 @@ export function analyzePose(
   const midShoulder = midpoint(leftShoulder, rightShoulder);
   const midHip = midpoint(leftHip, rightHip);
 
+  // Body scale — compute early so it's available for real-unit measurements below
+  const shoulderHipDist = distance(midShoulder, midHip);
+  const bodyScale = shoulderHipDist > 0.01 ? 0.5 / shoulderHipDist : 1;
+
   // Neck angle: deviation of head from shoulder midpoint vertical
   const vertical: Landmark = { x: midShoulder.x, y: midShoulder.y - 0.1, z: 0 };
   const neck = angleBetween(vertical, midShoulder, nose);
@@ -140,8 +144,8 @@ export function analyzePose(
   const hipVertical: Landmark = { x: midHip.x, y: midHip.y - 0.1, z: 0 };
   const spine = angleBetween(hipVertical, midHip, midShoulder);
 
-  // Shoulder balance: height difference in normalized units → approximate cm
-  const shoulderBalance = Math.abs(leftShoulder.y - rightShoulder.y) * 100;
+  // Shoulder balance: real cm using body scale (normalized diff × m/unit × 100 = cm)
+  const shoulderBalance = Math.abs(leftShoulder.y - rightShoulder.y) * bodyScale * 100;
 
   // Limb angles
   const leftElbow = angleBetween(
@@ -185,12 +189,6 @@ export function analyzePose(
   // Visibility score — fraction of landmarks with visibility > 0.5
   const visibilityScore =
     lm.filter((l) => (l.visibility ?? 0) > 0.5).length / lm.length;
-
-  // Body scale — real-world meters per normalized unit.
-  // Average human shoulder-to-hip distance is ~0.5m. Measuring it in
-  // normalized space gives a scale factor that corrects for camera distance.
-  const shoulderHipDist = distance(midShoulder, midHip);
-  const bodyScale = shoulderHipDist > 0.01 ? 0.5 / shoulderHipDist : 1;
 
   return {
     landmarks,
