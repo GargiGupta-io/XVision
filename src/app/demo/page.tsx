@@ -180,6 +180,14 @@ export default function DemoPage() {
   }, [drawSkeleton]);
 
   const startDetection = useCallback(async () => {
+    // Always stop any existing stream first to avoid camera conflict
+    if (videoRef.current?.srcObject) {
+      (videoRef.current.srcObject as MediaStream).getTracks().forEach(t => t.stop());
+      videoRef.current.srcObject = null;
+    }
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    setFrozen(false);
+    frozenRef.current = false;
     setLoading(true);
     setError(null);
 
