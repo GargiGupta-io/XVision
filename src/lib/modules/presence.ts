@@ -14,7 +14,7 @@ export interface PresenceResult {
   detected: boolean;
   dwellSeconds: number;
   zoneOccupancy: Record<string, boolean>;
-  confidence: number;
+  bodyVisibility: number;
 }
 
 // Default zones: divide the frame into 3 horizontal bands
@@ -78,6 +78,6 @@ export function analyzePresence(
     detected,
     dwellSeconds,
     zoneOccupancy,
-    confidence: Math.round(visibilityScore * 100) / 100,
+    bodyVisibility: Math.round(visibilityScore * 100) / 100,
   };
 }

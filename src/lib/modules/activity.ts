@@ -6,7 +6,7 @@ export interface ActivityResult {
   gesture: string | null;
   repCount: number;
   repCalibrating: boolean;
-  confidence: number;
+  bodyVisibility: number;
 }
 
 // Thresholds for classifying behavior from motion intensity
@@ -123,6 +123,6 @@ export function analyzeActivity(output: AnalyzerOutput): ActivityResult {
     behavior,
     gesture,
     repetitionCount: _totalReps,
-    confidence: Math.round(output.visibilityScore * 100) / 100,
+    bodyVisibility: Math.round(output.visibilityScore * 100) / 100,
   };
 }

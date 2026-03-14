@@ -10,7 +10,7 @@ export interface PostureResult {
     shoulderBalance: number;
   };
   grade: "excellent" | "good" | "fair" | "poor";
-  confidence: number;
+  bodyVisibility: number;
 }
 
 const IDEAL = {
@@ -56,6 +56,6 @@ export function analyzePosture(output: AnalyzerOutput): PostureResult {
       shoulderBalance:  Math.round(angles.shoulderBalance * 10) / 10,
     },
     grade,
-    confidence: Math.round(visibilityScore * 100) / 100,
+    bodyVisibility: Math.round(visibilityScore * 100) / 100,
   };
 }

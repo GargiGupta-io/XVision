@@ -6,7 +6,7 @@ export interface MovementResult {
   activeZones: string[];
   dominantRegion: string | null;
   velocity: number;
-  confidence: number;
+  bodyVisibility: number;
 }
 
 const THRESHOLDS = {
@@ -58,6 +58,6 @@ export function analyzeMovement(output: AnalyzerOutput): MovementResult {
     activeZones,
     dominantRegion,
     velocity: Math.round(overallMotion * 1000) / 1000,
-    confidence: Math.round(visibilityScore * 100) / 100,
+    bodyVisibility: Math.round(visibilityScore * 100) / 100,
   };
 }
